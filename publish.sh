@@ -12,7 +12,7 @@ if ! git diff-index --quiet --cached HEAD; then
 fi
 
 rm -rf node_modules
-npm ii
+npm i
 
 git add --all
 git commit -m "Dist" || echo "Nothing to distribute"
