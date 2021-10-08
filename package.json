@@ -1,0 +1,27 @@
+{
+  "name": "bundle-scripts",
+  "version": "0.2.5",
+  "main": "index.js",
+  "bin": {
+    "bundle-scripts": "bin/cli.js"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.10.3",
+    "@babel/register": "^7.14.5",
+    "cosmiconfig": "^7.0.1",
+    "dts-bundle-generator": "^5.8.0",
+    "fs-extra": "^10.0.0",
+    "microbundle": "0.13.3",
+    "print-message": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.3.1",
+    "eslint-config-takla": "^0.0.x"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "author": "mycoin",
+  "license": "MIT"
+}
