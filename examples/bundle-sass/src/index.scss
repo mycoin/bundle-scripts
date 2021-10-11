@@ -1,0 +1,7 @@
+@import '~@alife/next/variables.scss';
+@import "./includes/mixins.scss";
+
+html, body {
+  color: $color;
+  background: red;
+}

@@ -1,6 +1,6 @@
 {
   "name": "bundle-scripts",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "main": "index.js",
   "bin": {
     "bundle-scripts": "bin/cli.js"
@@ -12,7 +12,8 @@
     "dts-bundle-generator": "^5.8.0",
     "fs-extra": "^10.0.0",
     "microbundle": "0.13.3",
-    "print-message": "^3.0.1"
+    "print-message": "^3.0.1",
+    "scss-bundle": "^3.1.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
