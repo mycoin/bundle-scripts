@@ -1,10 +1,10 @@
 {
-  "name": "@alife/bundle-lib",
+  "name": "bundle-sass",
   "version": "0.12.11",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
-  "typings": "dist/index.d.ts",
+  "typings": "typings/index.d.ts",
   "scripts": {
     "dev": "../../bin/cli.js dev",
     "build": "../../bin/cli.js build"
@@ -24,7 +24,6 @@
     "postcss-pxtorem": "^6.0.0"
   },
   "dependencies": {
-    "@alife/next": "^1.19.32",
     "is-number": "^7.0.0",
     "is-object": "^1.0.2",
     "preact": "^10.5.14"

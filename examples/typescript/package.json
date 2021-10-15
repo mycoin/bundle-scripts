@@ -26,7 +26,6 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "npmlog": "^5.0.1",
     "preact": "^10.5.14"
   }
 }
