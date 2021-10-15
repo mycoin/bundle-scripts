@@ -1,6 +1,6 @@
 {
   "name": "bundle-scripts",
-  "version": "0.2.9",
+  "version": "0.3.9",
   "main": "index.js",
   "bin": {
     "bundle-scripts": "bin/cli.js"
