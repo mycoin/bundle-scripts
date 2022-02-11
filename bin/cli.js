@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-
+const { program } = require('commander')
 const bundle = require('../lib')
 const showVersion = require('../lib/showVersion')
 
@@ -9,6 +9,13 @@ const params = {
   cwd: process.cwd(),
   watch: /watch|dev/i.test(actionName),
 }
+
+program.option('-f,--format <string>')
+program.option('-t,--target <string>')
+program.option('--compress')
+program.parse()
+
+Object.assign(params, program.opts())
 
 process.on('SIGINT', process.exit)
 process.on('unhandledRejection', (error) => {
