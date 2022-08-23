@@ -10,7 +10,6 @@
   "files": [
     "dist",
     "bin",
-    "examples",
     "package.json",
     "README.md"
   ],
