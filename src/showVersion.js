@@ -1,5 +1,5 @@
-const printMessage = require('print-message')
-const { version } = require('../package.json')
+import printMessage from 'print-message'
+import { version } from '../package.json'
 
 const text = `
   _                     _ _
@@ -9,7 +9,7 @@ const text = `
   |_.__/ \\__,_|_| |_|\\__,_|_|\\___|  v${version}
 `
 
-module.exports = () => {
+export default () => {
   printMessage(text.split('\n'), {
     border: false,
     color: 'gray',

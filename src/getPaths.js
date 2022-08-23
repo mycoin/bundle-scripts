@@ -1,6 +1,6 @@
-const path = require('path')
+import path from 'path'
 
-module.exports = (cwd, name) => {
+export default (cwd, name) => {
   if (name && typeof name === 'string') {
     const result = path.join(cwd, name)
     const relatived = path.relative(cwd, path.dirname(result))

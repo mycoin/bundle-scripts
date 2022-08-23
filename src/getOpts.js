@@ -1,4 +1,4 @@
-const { cosmiconfigSync } = require('cosmiconfig')
+import { cosmiconfigSync } from 'cosmiconfig'
 
 const defaults = {
   'css-modules': null,
@@ -28,7 +28,7 @@ const convertArray = (value) => {
   return Array.isArray(value) ? value.join(',') : null
 }
 
-module.exports = (params) => {
+export default (params) => {
   const explorerSync = cosmiconfigSync('bundle')
   const result = explorerSync.search(params.cwd) || {}
   const opt = result.config || {}

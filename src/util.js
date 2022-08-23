@@ -1,6 +1,6 @@
-const path = require('path')
-const { spawn } = require('child_process')
-const log = require('npmlog')
+import path from 'path'
+import { spawn } from 'child_process'
+import log from 'npmlog'
 
 const getDirTopName = (field) => {
   if (field) {
@@ -35,16 +35,14 @@ const waitAWhile = (wait, fn) => {
   }
 }
 
-exports.checkPackages = checkPackages
-exports.waitAWhile = waitAWhile
-exports.exec = (command, args, options) => {
+const exec = (command, args, options) => {
   if (process.env.comspec) {
     return spawn(process.env.comspec, ['/c', command].concat(args), options)
   }
   return spawn(command, args, options)
 }
 
-exports.getNestPackage = (cwd, packageName) => {
+const getNestPackage = (cwd, packageName) => {
   return require.resolve(packageName, {
     paths: [
       path.join(cwd, 'node_modules'),
@@ -52,7 +50,7 @@ exports.getNestPackage = (cwd, packageName) => {
   })
 }
 
-exports.getDeferred = () => {
+const getDeferred = () => {
   const extend = {}
   const promise = new Promise((resolve, reject) => {
     extend.resolve = resolve
@@ -64,6 +62,15 @@ exports.getDeferred = () => {
   return promise
 }
 
-exports.npmLog = (type, ...content) => {
+const npmLog = (type, ...content) => {
   log[type]('bundle', ...content)
+}
+
+export {
+  checkPackages,
+  waitAWhile,
+  exec,
+  getNestPackage,
+  getDeferred,
+  npmLog,
 }

@@ -1,6 +1,6 @@
-const { writeFileSync, existsSync } = require('fs-extra')
-const { generateDtsBundle } = require('dts-bundle-generator')
-const { npmLog } = require('../util')
+import { writeFileSync, existsSync } from 'fs-extra'
+import { generateDtsBundle } from 'dts-bundle-generator'
+import { npmLog } from '../util'
 
 /**
  * generate DTS Bundle
@@ -9,7 +9,7 @@ const { npmLog } = require('../util')
  * @param {String} sourceFile
  * @returns
  */
-module.exports = (config, callback) => {
+export default (config, callback) => {
   const { resolvePath, packageJson } = config
   const target = packageJson.typings || packageJson.types
   const sourceFile = resolvePath('src/index.d.ts')

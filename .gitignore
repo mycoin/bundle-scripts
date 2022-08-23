@@ -203,5 +203,5 @@ dump.rdb
 .idea
 .justconf
 
-esm/
-dist
+dist/
+typings/

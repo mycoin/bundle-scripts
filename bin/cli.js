@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 const { program } = require('commander')
-const bundle = require('../lib')
-const showVersion = require('../lib/showVersion')
+const bundle = require('..')
 
 const actionName = process.argv[2]
 const params = {
@@ -23,7 +22,6 @@ process.on('unhandledRejection', (error) => {
   process.exit(1)
 })
 
-showVersion()
 bundle(actionName, params, (error, result) => {
   if (error) {
     throw error

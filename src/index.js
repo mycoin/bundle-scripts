@@ -1,16 +1,19 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
-const path = require('path')
-const chokidar = require('chokidar')
-const microbundle = require('microbundle')
-const { readJsonSync } = require('fs-extra')
-const commands = require('./commands')
-const getOpts = require('./getOpts')
-const getPaths = require('./getPaths')
-const { checkPackages, getDeferred, npmLog } = require('./util')
+import path from 'path'
+import chokidar from 'chokidar'
+import microbundle from 'microbundle'
+import { readJsonSync } from 'fs-extra'
 
-module.exports = (actionName, params, callback) => {
+import commands from './commands'
+import showVersion from './showVersion'
+import getOpts from './getOpts'
+import getPaths from './getPaths'
+
+import { checkPackages, getDeferred, npmLog } from './util'
+
+export default (actionName, params, callback) => {
   const options = getOpts(params)
   const resolvePath = (...name) => path.join(options.cwd, ...name)
   const packageJson = readJsonSync(resolvePath('package.json'))
@@ -28,27 +31,28 @@ module.exports = (actionName, params, callback) => {
 
   const callCommand = (type, throwError) => {
     const deferred = getDeferred()
+    const handleErr = (error) => {
+      npmLog('error', error)
+      if (throwError) {
+        throw error
+      }
+    }
     try {
       commands[type](config, (error, result) => {
         if (error) {
           deferred.reject(error)
-          npmLog('error', error)
-          if (throwError) {
-            throw error
-          }
+          handleErr(error)
         } else {
           deferred.resolve(result)
         }
       })
-    } catch (e) {
-      npmLog('error', e)
-      if (throwError) {
-        throw e
-      }
+    } catch (error) {
+      handleErr(error)
     }
     return deferred
   }
 
+  showVersion()
   if (commands[actionName]) {
     commands[actionName](config, callback)
   } else {

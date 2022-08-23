@@ -1,9 +1,8 @@
-const path = require('path')
-const { emptyDirSync } = require('fs-extra')
-const { mkdirpSync } = require('fs-extra')
-const { npmLog } = require('../util')
+import path from 'path'
+import { emptyDirSync, mkdirpSync } from 'fs-extra'
+import { npmLog } from '../util'
 
-module.exports = (config, callback) => {
+export default (config, callback) => {
   const { paths, options } = config
   const removeDir = (dir) => {
     if (dir && dir.startsWith(options.cwd)) {
