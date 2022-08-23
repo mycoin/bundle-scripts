@@ -205,3 +205,4 @@ dump.rdb
 
 dist/
 typings/
+node_modules/
