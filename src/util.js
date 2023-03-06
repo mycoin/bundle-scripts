@@ -66,11 +66,16 @@ const npmLog = (type, ...content) => {
   log[type]('bundle', ...content)
 }
 
+const getGlobalEnvs = () => ({
+  'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
+})
+
 export {
   checkPackages,
   waitAWhile,
   exec,
   getNestPackage,
+  getGlobalEnvs,
   getDeferred,
   npmLog,
 }

@@ -1,4 +1,5 @@
 import { cosmiconfigSync } from 'cosmiconfig'
+import { getGlobalEnvs } from './util'
 
 const defaults = {
   'css-modules': null,
@@ -35,7 +36,10 @@ export default (params) => {
 
   opt.generateTypes = true
   opt.alias = convertMap(opt.alias)
-  opt.define = convertMap(opt.define)
+  opt.define = convertMap({
+    ...getGlobalEnvs(),
+    ...opt.define,
+  })
   opt.globals = convertMap(opt.globals)
   opt.external = convertArray(opt.external)
 
