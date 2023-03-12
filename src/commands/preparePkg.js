@@ -1,5 +1,5 @@
 import path from 'path'
-import { readdirSync, copySync, mkdirSync, writeJsonSync, readJsonSync } from 'fs-extra'
+import { readdirSync, copySync, ensureDirSync, writeJsonSync, readJsonSync } from 'fs-extra'
 
 /**
  * generate DTS Bundle
@@ -10,16 +10,15 @@ import { readdirSync, copySync, mkdirSync, writeJsonSync, readJsonSync } from 'f
  */
 export default (config, callback) => {
   const { resolvePath, options } = config
-  const dist = process.env.BUILD_DEST || '.build'
-  const isDaily = /env=daily/i.test(process.env.BUILD_ARGV_STR)
+  const dist = process.env.BUILD_DEST_DIR
 
-  if (dist) {
-    mkdirSync(dist)
+  if (dist && dist.startsWith('/')) {
+    ensureDirSync(dist)
     readdirSync(options.cwd).forEach((filename) => {
       const from = resolvePath(filename)
       const target = path.join(dist, filename)
 
-      if (filename === 'node_modules' || filename === dist) {
+      if (filename === 'node_modules' || target === path.normalize(dist)) {
         return
       }
       copySync(from, target, {
@@ -27,7 +26,7 @@ export default (config, callback) => {
         overwrite: true,
       })
     })
-    if (isDaily) {
+    if (/ENV=daily/i.test(process.env.BUILD_ARGV_STR)) {
       const pkgFile = path.join(dist, 'package.json')
       const pkg = readJsonSync(pkgFile)
 
