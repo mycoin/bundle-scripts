@@ -1,5 +1,9 @@
 import path from 'path'
-import { readdirSync, copySync, ensureDirSync, writeJsonSync, readJsonSync } from 'fs-extra'
+import { readdirSync, copySync, ensureDirSync, writeJsonSync, readJsonSync, emptyDir } from 'fs-extra'
+
+const dist = process.env.BUILD_DEST_DIR
+const taskId = process.env.BUILD_TASK_ID
+const isDaily = /ENV=daily/i.test(process.env.BUILD_ARGV_STR)
 
 /**
  * generate DTS Bundle
@@ -10,15 +14,15 @@ import { readdirSync, copySync, ensureDirSync, writeJsonSync, readJsonSync } fro
  */
 export default (config, callback) => {
   const { resolvePath, options } = config
-  const dist = process.env.BUILD_DEST_DIR
 
-  if (dist && dist.startsWith('/')) {
+  if (dist && dist.startsWith('.')) {
     ensureDirSync(dist)
+    emptyDir(dist)
     readdirSync(options.cwd).forEach((filename) => {
       const from = resolvePath(filename)
       const target = path.join(dist, filename)
 
-      if (filename === 'node_modules' || target === path.normalize(dist)) {
+      if (['node_modules', '.git', dist].indexOf(filename) > -1) {
         return
       }
       copySync(from, target, {
@@ -26,11 +30,12 @@ export default (config, callback) => {
         overwrite: true,
       })
     })
-    if (/ENV=daily/i.test(process.env.BUILD_ARGV_STR)) {
+
+    if (isDaily) {
       const pkgFile = path.join(dist, 'package.json')
       const pkg = readJsonSync(pkgFile)
 
-      pkg.version += '-beta.' + new Date() * 1
+      pkg.version += '-beta.' + (taskId || Date.now())
       writeJsonSync(pkgFile, pkg, {
         spaces: 2,
       })
