@@ -44,9 +44,7 @@ const exec = (command, args, options) => {
 
 const getNestPackage = (cwd, packageName) => {
   return require.resolve(packageName, {
-    paths: [
-      path.join(cwd, 'node_modules'),
-    ],
+    paths: [path.join(cwd, 'node_modules')],
   })
 }
 
@@ -66,11 +64,12 @@ const npmLog = (type, ...content) => {
   log[type]('bundle', ...content)
 }
 
-const getGlobalEnvs = () => ({
-  'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
+const getGlobalEnvs = (pkg) => ({
+  'process.env.VERSION': JSON.stringify(pkg.version),
 })
 
 export {
+  /**/
   checkPackages,
   waitAWhile,
   exec,

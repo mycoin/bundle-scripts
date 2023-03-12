@@ -12,6 +12,5 @@ const text = `
 export default () => {
   printMessage(text.split('\n'), {
     border: false,
-    color: 'gray',
   })
 }

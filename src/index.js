@@ -29,7 +29,7 @@ export default (actionName, params, callback) => {
     },
   }
 
-  const callCommand = (type, throwError) => {
+  const cmd = (type, throwError) => {
     const deferred = getDeferred()
     const handleErr = (error) => {
       npmLog('error', error)
@@ -56,13 +56,17 @@ export default (actionName, params, callback) => {
   if (commands[actionName]) {
     commands[actionName](config, callback)
   } else {
-    callCommand('clean').then(() => {
+    cmd('clean').then(() => {
       npmLog('info', 'bundle...')
 
       checkPackages(packageJson)
       microbundle(options).then(() => {
-        callCommand('bundle-scss', true)
-        callCommand('bundle-dts', true)
+        Promise.all([
+          cmd('bundle-scss', true), // 打包SASS
+          cmd('bundle-dts', true),
+        ]).then(() => {
+          cmd('prepare-pkg', true)
+        })
       })
     })
     if (options.watch) {
@@ -76,12 +80,10 @@ export default (actionName, params, callback) => {
       })
       watcher.on('all', (event, paths) => {
         const basename = path.basename(paths)
-        if (basename && typeof basename === 'string') {
-          if (basename.endsWith('.scss')) {
-            callCommand('bundle-scss')
-          } else if (basename.endsWith('.d.ts')) {
-            callCommand('bundle-dts')
-          }
+        if (basename.endsWith('.scss')) {
+          cmd('bundle-scss')
+        } else if (basename.endsWith('.d.ts')) {
+          cmd('bundle-dts')
         }
       })
     }
