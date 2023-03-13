@@ -4,19 +4,18 @@
 import path from 'path'
 import chokidar from 'chokidar'
 import microbundle from 'microbundle'
-import { readJsonSync } from 'fs-extra'
 
 import commands from './commands'
 import showVersion from './showVersion'
 import getOpts from './getOpts'
 import getPaths from './getPaths'
 
-import { checkPackages, getDeferred, npmLog } from './util'
+import { checkPackages, checkBranchName, getDeferred, npmLog } from './util'
 
 export default (actionName, params, callback) => {
   const options = getOpts(params)
   const resolvePath = (...name) => path.join(options.cwd, ...name)
-  const packageJson = readJsonSync(resolvePath('package.json'))
+  const packageJson = options.pkg
   const sourceDir = resolvePath('src')
   const config = {
     resolvePath,
@@ -28,7 +27,6 @@ export default (actionName, params, callback) => {
       typings: getPaths(options.cwd, packageJson.typings || packageJson.types),
     },
   }
-
   const cmd = (type, throwError) => {
     const deferred = getDeferred()
     const handleErr = (error) => {
@@ -58,8 +56,8 @@ export default (actionName, params, callback) => {
   } else {
     cmd('clean').then(() => {
       npmLog('info', 'bundle...')
-
       checkPackages(packageJson)
+      checkBranchName(packageJson)
       microbundle(options).then(() => {
         Promise.all([
           cmd('bundle-scss', true), // 打包SASS

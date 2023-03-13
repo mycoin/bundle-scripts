@@ -1,9 +1,6 @@
 import path from 'path'
 import { readdirSync, copySync, ensureDirSync, writeJsonSync, readJsonSync, emptyDir } from 'fs-extra'
-
-const dist = process.env.BUILD_DEST_DIR
-const taskId = process.env.BUILD_TASK_ID
-const isDaily = /ENV=daily/i.test(process.env.BUILD_ARGV_STR)
+import { isCloudBuild } from '../util'
 
 /**
  * generate DTS Bundle
@@ -14,15 +11,29 @@ const isDaily = /ENV=daily/i.test(process.env.BUILD_ARGV_STR)
  */
 export default (config, callback) => {
   const { resolvePath, options } = config
+  const buildDestDir = process.env.BUILD_DEST_DIR
+  const buildTaskId = process.env.BUILD_TASK_ID
 
-  if (dist && dist.startsWith('.')) {
-    ensureDirSync(dist)
-    emptyDir(dist)
+  const updateVersion = () => {
+    const pkgFile = path.join(buildDestDir, 'package.json')
+    const pkg = readJsonSync(pkgFile)
+    if (/ENV=daily/i.test(process.env.BUILD_ARGV_STR)) {
+      pkg.version += '-beta.' + (buildTaskId || Date.now())
+    }
+    writeJsonSync(pkgFile, pkg, {
+      spaces: 2,
+    })
+  }
+
+  // 只有开启云构建才需要操作
+  if (isCloudBuild()) {
+    ensureDirSync(buildDestDir)
+    emptyDir(buildDestDir)
     readdirSync(options.cwd).forEach((filename) => {
       const from = resolvePath(filename)
-      const target = path.join(dist, filename)
+      const target = path.join(buildDestDir, filename)
 
-      if (['node_modules', '.git', dist].indexOf(filename) > -1) {
+      if (['node_modules', '.git', buildDestDir].indexOf(filename) > -1) {
         return
       }
       copySync(from, target, {
@@ -30,16 +41,7 @@ export default (config, callback) => {
         overwrite: true,
       })
     })
-
-    if (isDaily) {
-      const pkgFile = path.join(dist, 'package.json')
-      const pkg = readJsonSync(pkgFile)
-
-      pkg.version += '-beta.' + (taskId || Date.now())
-      writeJsonSync(pkgFile, pkg, {
-        spaces: 2,
-      })
-    }
+    updateVersion(buildDestDir)
   }
   callback()
 }

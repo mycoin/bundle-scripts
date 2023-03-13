@@ -1,6 +1,6 @@
 {
   "name": "bundle-scripts",
-  "version": "0.3.24",
+  "version": "0.3.25",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "typings": "typings/index.d.ts",

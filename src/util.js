@@ -1,4 +1,3 @@
-import path from 'path'
 import { spawn } from 'child_process'
 import log from 'npmlog'
 
@@ -25,13 +24,17 @@ const checkPackages = (pkg) => {
   checkPaths(pkg, 'module', ['dist', 'es'])
   checkPaths(pkg, 'typings', ['types', 'typings'])
 }
-const waitAWhile = (wait, fn) => {
-  let timeout = null
-  return (...params) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      fn(...params)
-    }, wait || 1000)
+
+const isCloudBuild = () => process.env.BUILD_ENV === 'cloud'
+const checkBranchName = (pkg) => {
+  if (!isCloudBuild()) {
+    return
+  }
+  const buildGitBranch = process.env.BUILD_GIT_BRANCH
+  const branchVersion = buildGitBranch.split('/')[1]
+
+  if (branchVersion !== pkg.version) {
+    throw new Error("package's `version` missmatch git branch " + branchVersion)
   }
 }
 
@@ -40,12 +43,6 @@ const exec = (command, args, options) => {
     return spawn(process.env.comspec, ['/c', command].concat(args), options)
   }
   return spawn(command, args, options)
-}
-
-const getNestPackage = (cwd, packageName) => {
-  return require.resolve(packageName, {
-    paths: [path.join(cwd, 'node_modules')],
-  })
 }
 
 const getDeferred = () => {
@@ -70,10 +67,10 @@ const getGlobalEnvs = (pkg) => ({
 
 export {
   /**/
+  isCloudBuild,
+  checkBranchName,
   checkPackages,
-  waitAWhile,
   exec,
-  getNestPackage,
   getGlobalEnvs,
   getDeferred,
   npmLog,
