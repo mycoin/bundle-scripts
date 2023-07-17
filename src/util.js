@@ -30,6 +30,7 @@ const checkBranchName = (pkg) => {
   if (!isCloudBuild()) {
     return
   }
+
   const buildGitBranch = process.env.BUILD_GIT_BRANCH
   const branchVersion = buildGitBranch.split('/')[1]
 
@@ -41,8 +42,9 @@ const checkBranchName = (pkg) => {
 const exec = (command, args, options) => {
   if (process.env.comspec) {
     return spawn(process.env.comspec, ['/c', command].concat(args), options)
+  } else {
+    return spawn(command, args, options)
   }
-  return spawn(command, args, options)
 }
 
 const getDeferred = () => {
@@ -62,6 +64,8 @@ const npmLog = (type, ...content) => {
 }
 
 const getGlobalEnvs = (pkg) => ({
+  // build timestamp
+  'process.env.BTS': JSON.stringify(new Date()),
   'process.env.VERSION': JSON.stringify(pkg.version),
 })
 

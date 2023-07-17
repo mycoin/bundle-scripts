@@ -1,6 +1,6 @@
 {
   "name": "bundle-scripts",
-  "version": "0.3.25",
+  "version": "0.3.26",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "typings": "typings/index.d.ts",
@@ -19,13 +19,13 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.10.3",
-    "@babel/register": "^7.14.5",
-    "chokidar": "^3.5.2",
-    "commander": "^9.0.0",
-    "cosmiconfig": "^7.0.1",
-    "dts-bundle-generator": "^5.8.0",
-    "fs-extra": "^10.0.0",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/register": "^7.22.5",
+    "chokidar": "^3.5.3",
+    "commander": "^9.5.0",
+    "cosmiconfig": "^7.1.0",
+    "dts-bundle-generator": "^5.9.0",
+    "fs-extra": "^10.1.0",
     "microbundle": "0.13.3",
     "npmlog": "^5.0.1",
     "print-message": "^3.0.1",
